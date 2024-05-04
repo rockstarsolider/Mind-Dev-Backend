@@ -6,3 +6,8 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
+    
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    age = models.IntegerField(blank=True)
+    province = models.CharField(max_length=100, blank=True)
