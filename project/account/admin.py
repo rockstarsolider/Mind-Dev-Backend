@@ -1,21 +1,18 @@
 from django.contrib import admin
 from .models import CustomUser
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserChangeForm
 
-admin.site.register(CustomUser)
+class MyUserChangeForm(UserChangeForm):
+    class Meta(UserChangeForm.Meta):
+        model = CustomUser
 
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+class MyUserAdmin(UserAdmin):
+    form = MyUserChangeForm
 
-from .models import Profile
-
-class ProfileInline(admin.StackedInline):
-    model = Profile
-    can_delete = False
-    verbose_name_plural = "profile"
-
-class UserAdmin(BaseUserAdmin):
-    inlines = [ProfileInline]
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('age','province','intro_method',)}),
+    )
 
 
-# Re-register UserAdmin
-admin.site.unregister(CustomUser)
-admin.site.register(CustomUser, UserAdmin)
+admin.site.register(CustomUser, MyUserAdmin)
