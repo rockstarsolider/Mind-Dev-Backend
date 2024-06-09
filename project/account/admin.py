@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Teacher, Student
+from .models import CustomUser, Teacher, Student, UserType
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 
@@ -13,9 +13,10 @@ class MyUserAdmin(UserAdmin):
     form = MyUserChangeForm
 
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('age','province','intro_method',)}),
+        (None, {'fields': ('user_type_id','phone_number',)}),
     )
 
 admin.site.register(CustomUser, MyUserAdmin)
 admin.site.register(Teacher)
 admin.site.register(Student)
+admin.site.register(UserType)

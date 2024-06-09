@@ -2,62 +2,6 @@ from django.db import models
 from account.models import Teacher, Student
 
 # Create your models here.
-class Course(models.Model):
-    name = models.CharField(max_length=100)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_edited = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-    
-class CourseGroup(models.Model):
-    title = models.CharField(max_length=100)
-    start = models.DateTimeField(auto_now_add=True)
-    weekly_meetings_dates = models.CharField(max_length=100)
-    course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
-    teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.title
-
-class CourseEnroll(models.Model):
-    student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
-    group_id = models.ForeignKey(CourseGroup, on_delete=models.CASCADE)
-
-class Project(models.Model):
-    course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
-    def __str__(self):
-        return str(self.course_id)
-
-class Faze(models.Model):
-    name = models.CharField(max_length=100)
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-class ProjectDefinition(models.Model):
-    name = models.CharField(max_length=100)
-    project_description = models.TextField()
-    project_video = models.FileField(upload_to='media',null=True)
-    project_code = models.TextField()
-    project_image = models.FileField(upload_to='media',null=True)
-    faze_id = models.ForeignKey(Faze, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-class SubmitProject(models.Model):
-    submit_files_zip_link = models.CharField(max_length=100)
-    submit_comments = models.TextField()
-    course_enroll_id = models.ForeignKey(CourseEnroll, on_delete=models.CASCADE)
-    project_defenition_id = models.ForeignKey(ProjectDefinition, on_delete=models.CASCADE)
-
-class Section(models.Model):
-    faze_id = models.ForeignKey(Faze, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.faze_id)
 
 class Quiz(models.Model):
     question = models.CharField(max_length=100)
@@ -66,10 +10,91 @@ class Quiz(models.Model):
     option3 = models.CharField(max_length=100)
     option4 = models.CharField(max_length=100)
     correct_option = models.CharField(max_length=100)
-    section_id = models.ForeignKey(Section, on_delete=models.CASCADE)
 
 class SubmitQuiz(models.Model):
     student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
     quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     is_correct = models.BooleanField(default=False)
     points = models.IntegerField(default=0)
+    def __str__(self):
+        return str(self.student_id)+str( self.quiz_id)
+
+class Terms(models.Model):
+    term_num = models.IntegerField(null=True, blank=True)
+    term_str = models.CharField(max_length=256, null=True, blank=True)
+    
+    def __str__(self):
+        return str(self.term_str)
+
+class WeekDays(models.Model):
+    day_num = models.IntegerField(null=True, blank=True)
+    day_str = models.CharField(max_length=256, null=True, blank=True)
+    
+    def __str__(self):
+        return str(self.day_str)
+
+class Course(models.Model):
+    title = models.CharField(max_length=256, null=True, blank=True)
+    term_number = models.ForeignKey(Terms, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return str(self.title)
+    
+class CourseGroup(models.Model):
+    start_date = models.DateField(null=True)
+    finish_date = models.DateField(null=True)
+    edited_date = models.DateField(null=True)
+    technical_meeting_day = models.ForeignKey(WeekDays, models.CASCADE)
+    meta_meeting_day = models.ForeignKey(WeekDays, models.CASCADE,related_name='meta_meeting')
+    course_id = models.ForeignKey(Course, models.CASCADE)
+    main_mentor_id = models.ForeignKey(Teacher, models.CASCADE)
+    second_mentor_id = models.ForeignKey(Teacher, models.CASCADE,related_name='second_mentor',null=True)
+
+    def __str__(self):
+        return str(self.main_mentor_id)+' group'
+
+class GroupMeetings(models.Model):
+    hold_on_date = models.DateField(null=True)
+    guests_numbers = models.IntegerField(default=0)
+    course_group_id = models.ForeignKey(CourseGroup, models.CASCADE)
+    def __str__(self):
+        return str(self.course_group_id.main_mentor_id)+str(self.hold_on_date)
+
+class StudentCourseGroupMembership(models.Model):
+    student_id = models.ForeignKey(Student, models.CASCADE)
+    course_group_id = models.ForeignKey(CourseGroup, models.CASCADE)
+    def __str__(self):
+        return str(self.student_id)+str(self.course_group_id)
+    
+class WeeklyTask(models.Model):
+    title = models.CharField(max_length=256)
+    description = models.TextField(null=True, blank=True)
+    days_to_complete = models.IntegerField(default=0)
+    resources_links = models.CharField(max_length=256, null=True, blank=True)
+    course_id = models.ForeignKey(Course, models.CASCADE)
+    def __str__(self):
+        return str(self.title)
+
+class ImageLinks(models.Model):
+    url = models.CharField(max_length=256)
+    weekly_task_id = models.ForeignKey(WeeklyTask, models.CASCADE)
+    def __str__(self):
+        return str(self.weekly_task_id)
+    
+class VideoLinks(models.Model):
+    url = models.CharField(max_length=256)
+    weekly_task_id = models.ForeignKey(WeeklyTask, models.CASCADE)
+    def __str__(self):
+        return str(self.weekly_task_id)
+
+class CourseGroupWeeklyTask(models.Model):
+    weekly_tasks_id = models.ForeignKey(WeeklyTask, models.CASCADE)
+    course_group_id = models.ForeignKey(CourseGroup, models.CASCADE)
+    def __str__(self):
+        return str(self.course_group_id)+'  '+str(self.weekly_tasks_id.title)
+
+class StudentDoTask(models.Model):
+    student_course_group_member_id = models.ForeignKey(StudentCourseGroupMembership, models.CASCADE)
+    course_group_weekly_tasks_id = models.ForeignKey(CourseGroupWeeklyTask, models.CASCADE)
+    completed_task = models.BooleanField(default=False)
+    attend_at_meeting = models.BooleanField(default=False)
