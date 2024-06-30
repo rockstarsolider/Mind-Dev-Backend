@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import User
 
 USER_TYPES = ( ('mentor', 'Mentor'), ('student', 'Student'), )
 
@@ -32,6 +31,8 @@ class Student(models.Model):
     interets = models.CharField(max_length=256 ,blank=True)
     degree = models.CharField(max_length=50 ,blank=True)
     birth_date = models.DateField(null=True)
+    cv = models.FileField(upload_to='cv/',null=True, blank=True)
+    uploaded_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return str(self.user)

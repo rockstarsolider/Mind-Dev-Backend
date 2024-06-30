@@ -3,22 +3,6 @@ from account.models import Teacher, Student
 
 # Create your models here.
 
-class Quiz(models.Model):
-    question = models.CharField(max_length=100)
-    option1 = models.CharField(max_length=100)
-    option2 = models.CharField(max_length=100)
-    option3 = models.CharField(max_length=100)
-    option4 = models.CharField(max_length=100)
-    correct_option = models.CharField(max_length=100)
-
-class SubmitQuiz(models.Model):
-    student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
-    quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    is_correct = models.BooleanField(default=False)
-    points = models.IntegerField(default=0)
-    def __str__(self):
-        return str(self.student_id)+str( self.quiz_id)
-
 class Terms(models.Model):
     term_num = models.IntegerField(null=True, blank=True)
     term_str = models.CharField(max_length=256, null=True, blank=True)
@@ -98,3 +82,20 @@ class StudentDoTask(models.Model):
     course_group_weekly_tasks_id = models.ForeignKey(CourseGroupWeeklyTask, models.CASCADE)
     completed_task = models.BooleanField(default=False)
     attend_at_meeting = models.BooleanField(default=False)
+
+
+class Quiz(models.Model):
+    question = models.CharField(max_length=100)
+    option1 = models.CharField(max_length=100)
+    option2 = models.CharField(max_length=100)
+    option3 = models.CharField(max_length=100)
+    option4 = models.CharField(max_length=100)
+    correct_option = models.CharField(max_length=100)
+
+class SubmitQuiz(models.Model):
+    student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
+    quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    is_correct = models.BooleanField(default=False)
+    points = models.IntegerField(default=0)
+    def __str__(self):
+        return str(self.student_id)+str( self.quiz_id)

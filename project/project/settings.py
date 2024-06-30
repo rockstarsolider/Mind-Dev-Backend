@@ -141,6 +141,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'AUTH_USER_MODEL': 'account.CustomUser',
 }
 
 SIMPLE_JWT = {
@@ -150,6 +151,10 @@ SIMPLE_JWT = {
 
 DJOSER = {
     'SERIALIZERS': {
+        'user': 'account.serializers.CustomUserSerializer',
         'user_create': 'account.serializers.CustomUserCreateSerializer',
-    }
+    },
 }
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
