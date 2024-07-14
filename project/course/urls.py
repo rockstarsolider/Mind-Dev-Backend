@@ -1,6 +1,6 @@
 from django.urls import path
 from djoser import views as djoser_views
-from .views import CourseGroupViewSet, CourseViewSet, TermViewSet, WeekDayViewSet, GroupMeetingViewSet, StudentCourseGroupViewSet, WeeklyTaskViewSet, ImageLinkViewSet,VideoLinkViewSet,CourseGroupWeeklyTaskViewSet,StudentDoTaskViewSet
+from .views import *
 
 urlpatterns =[
     path('group/<int:pk>/', CourseGroupViewSet.as_view({'get': 'retrieve'}), name='user'),
@@ -14,4 +14,9 @@ urlpatterns =[
     path('video/<int:pk>/', VideoLinkViewSet.as_view({'get': 'retrieve'}), name='user'),
     path('group_task/<int:pk>/', CourseGroupWeeklyTaskViewSet.as_view({'get': 'retrieve'}), name='user'),
     path('student_do_task/<int:pk>/', StudentDoTaskViewSet.as_view({'get': 'retrieve'}), name='user'),
+
+    path('group_mates/', groupMate.as_view(), name='user'),
+    path('meeting_day/', meetingApi.as_view(), name='user'),
+    path('prev_tasks/', prevTasks.as_view(), name='user'),
+    path('new_task/', newTask.as_view(), name='user'),
 ]
