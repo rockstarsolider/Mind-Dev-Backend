@@ -1,6 +1,7 @@
 from django.db import models
 from account.models import Teacher, Student
-
+from django_jalali.db import models as jmodels
+ 
 # Create your models here.
 
 class Terms(models.Model):
@@ -38,7 +39,7 @@ class CourseGroup(models.Model):
         return str(self.main_mentor_id)+' group'
 
 class GroupMeetings(models.Model):
-    hold_on_date = models.DateField(null=True)
+    hold_on_date = jmodels.jDateField(null=True)
     guests_numbers = models.IntegerField(default=0)
     course_group_id = models.ForeignKey(CourseGroup, models.CASCADE)
     def __str__(self):
@@ -53,7 +54,7 @@ class StudentCourseGroupMembership(models.Model):
 class WeeklyTask(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
-    days_to_complete = models.IntegerField(default=0)
+    days_to_complete = models.DateField(null=True)
     resources_links = models.CharField(max_length=256, null=True, blank=True)
     course_id = models.ForeignKey(Course, models.CASCADE)
     def __str__(self):

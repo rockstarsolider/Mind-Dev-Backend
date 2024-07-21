@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'tasks',
     "corsheaders",
     'course',
+    'django_jalali',
 ]
 
 MIDDLEWARE = [
@@ -156,5 +158,8 @@ DJOSER = {
     },
 }
 
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = '/media/'
+TEMPLATE_DIR = os.path.join(BASE_DIR,"tasks/templates")
+
+STATIC_URL = '/tasks/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, "tasks/static")

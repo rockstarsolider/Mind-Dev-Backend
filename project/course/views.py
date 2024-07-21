@@ -1,14 +1,11 @@
 from rest_framework.response import Response
-from .models import CourseGroup, Course, Terms, WeekDays, GroupMeetings, StudentCourseGroupMembership, WeeklyTask, ImageLinks, VideoLinks, CourseGroupWeeklyTask, StudentDoTask
-from .serializers import CourseGroupSerializer, CourseSerializer, TermSerializer, WeekDaySerializer, GroupMeetingSerializer, StudentCourseGroupSerializer, WeeklyTaskSerializer, ImageLinkSerializer, VideoLinkSerializer, CourseGroupWeeklyTaskSerializer, StudentDoTaskSerializer
-from rest_framework import viewsets
+from .models import *
+from .serializers import *
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
 from rest_framework.views import APIView
 from account import models, serializers
-
-
-
+from django.db.models import F
+from datetime import datetime
 class groupMate(APIView):
     Permission_classes = [IsAuthenticated]
 
@@ -59,6 +56,10 @@ class newTask(APIView):
     def get(self,request, format = None):
         student = models.Student.objects.filter(user=request.user).first()
         membership = StudentCourseGroupMembership.objects.filter(student_id=student).first()
-        do_task = StudentDoTask.objects.filter(student_course_group_member_id=membership).last()
-        task = [student.user.first_name,WeeklyTaskSerializer(do_task.course_group_weekly_tasks_id.weekly_tasks_id).data]
+        do_task = StudentDoTask.objects.filter(student_course_group_member_id=membership).last().course_group_weekly_tasks_id.weekly_tasks_id
+        if do_task.days_to_complete:  
+            days_remaining = (do_task.days_to_complete - datetime.today().date()).days
+        else:  
+            days_remaining = None
+        task = [student.user.first_name,WeeklyTaskSerializer(do_task).data,days_remaining]
         return Response(task)

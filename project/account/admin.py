@@ -4,6 +4,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 
 admin.site.site_header = "Mind Dev"
+admin.site.index_title = "Mind Dev administration"
+admin.site.site_title = "Mind Dev admin"
 
 class MyUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
