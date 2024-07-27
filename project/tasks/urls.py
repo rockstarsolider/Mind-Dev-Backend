@@ -1,6 +1,10 @@
-from rest_framework.routers import DefaultRouter
-from .views import TaskViewSet
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
+from .views import *
 
-router = DefaultRouter()
-router.register(r'tasks', TaskViewSet, basename='task')
-urlpatterns = router.urls
+urlpatterns = [
+    path('fazes/', CourseFazes.as_view(), name='fazes'),
+    path('sections/<int:pk>', FazeSections.as_view(), name='sections'),
+]
+

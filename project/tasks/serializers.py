@@ -1,17 +1,17 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from .models import Task
+from .models import Course, Faze, Section
 
-class TaskSerializer(serializers.ModelSerializer):
-    user_email = serializers.EmailField(write_only=True)
-
+class CourseSerializer(serializers.ModelSerializer): 
     class Meta:
-        model = Task
-        fields = ['id', 'user_email', 'title', 'description', 'completed', 'created_at']
+        model = Course
+        fields = '__all__'
 
-    def create(self, validated_data):
-        user_email = validated_data.pop('user_email')
-        user = get_user_model().objects.get(email=user_email)
-        validated_data['user'] = user
-        task = Task.objects.create(**validated_data)
-        return task
+class FazeSerializer(serializers.ModelSerializer):  
+    class Meta:
+        model = Faze
+        fields = '__all__' 
+
+class SectionSerializer(serializers.ModelSerializer):  
+    class Meta:
+        model = Section
+        fields = '__all__' 

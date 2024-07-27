@@ -84,7 +84,6 @@ class StudentDoTask(models.Model):
     completed_task = models.BooleanField(default=False)
     attend_at_meeting = models.BooleanField(default=False)
 
-
 class Quiz(models.Model):
     question = models.CharField(max_length=100)
     option1 = models.CharField(max_length=100)

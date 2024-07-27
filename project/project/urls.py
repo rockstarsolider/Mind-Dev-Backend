@@ -16,16 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from tasks.admin import task_admin_site
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('taskadmin/', task_admin_site.urls),
     path('', include('account.urls')),
-    path('', include('tasks.urls')),
+    path('task/', include('tasks.urls')),
     path('course/', include('course.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

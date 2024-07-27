@@ -4,7 +4,6 @@ from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from account import models, serializers
-from django.db.models import F
 from datetime import datetime
 class groupMate(APIView):
     Permission_classes = [IsAuthenticated]
